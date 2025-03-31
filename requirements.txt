@@ -1,0 +1,9 @@
+pandas
+sqlalchemy
+pyyaml
+psycopg2-binary
+python-dotenv
+pytest
+black
+isort
+flake8

@@ -1,0 +1,123 @@
+# Sample ETL Configuration for Data Warehouse ETL Framework
+
+# Extract data from multiple sources
+extractors:
+  customer_data:
+    type: CSV
+    file_path: ./data/customers.csv
+    delimiter: ","
+    encoding: utf-8
+    header: true
+    dtype:
+      customer_id: str
+      first_name: str
+      last_name: str
+      email: str
+      age: int
+      signup_date: str
+    parse_dates: 
+      - signup_date
+
+  order_data:
+    type: JSON
+    file_path: ./data/orders.json
+    orient: records
+    encoding: utf-8
+
+  product_data:
+    type: SQL
+    connection_string: "sqlite:///./data/product_db.sqlite"
+    query: "SELECT * FROM products"
+
+# Transform the data
+transformers:
+  # Clean the customer data
+  data_cleaning:
+    type: cleaning
+    operations:
+      - drop_duplicates:
+          subset: ["customer_id", "email"]
+          keep: first
+      - drop_columns:
+          columns: ["middle_name", "phone_extension"]
+      - fill_na:
+          columns:
+            age: 0
+            signup_date: ""
+      - string_transform:
+          columns:
+            first_name: upper
+            last_name: upper
+            email: lower
+
+  # Normalize data for the warehouse
+  data_normalization:
+    type: normalization
+    methods:
+      - date_format:
+          columns:
+            signup_date: "%Y-%m-%d"
+      - numeric_scaling:
+          columns:
+            age: 
+              method: min_max
+              feature_range: [0, 1]
+
+  # Validate the transformed data
+  data_validation:
+    type: validation
+    rules:
+      - not_null:
+          columns: ["customer_id", "email"]
+      - unique:
+          columns: ["customer_id"]
+      - range_check:
+          columns:
+            age: 
+              min: 0
+              max: 120
+      - regex_match:
+          columns:
+            email: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+
+# Load data to destinations
+loaders:
+  warehouse_db:
+    type: SQL
+    connection_string: "sqlite:///./data/warehouse.sqlite"
+    table_name: "customer_data"
+    schema: "main"
+    if_exists: "replace"
+    index: false
+    chunksize: 1000
+
+  analytics_csv:
+    type: CSV
+    file_path: "./output/customer_analytics.csv"
+    delimiter: ","
+    encoding: "utf-8"
+    mode: "w"
+    include_header: true
+    index: false
+    date_format: "%Y-%m-%d"
+    create_dirs: true
+
+  metrics_json:
+    type: JSON
+    file_path: "./output/metrics.json"
+    encoding: "utf-8"
+    orient: "records"
+    indent: 2
+    create_dirs: true
+
+# Pipeline configuration
+pipeline:
+  name: "Customer Data Pipeline"
+  parallel_extract: false
+  continue_on_error: true
+  retry:
+    max_attempts: 3
+    delay_seconds: 5
+  logging:
+    level: "INFO"
+    file: "./logs/etl_pipeline.log"

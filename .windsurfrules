@@ -1,0 +1,90 @@
+# Windsurf Rules for Data Warehouse ETL Framework
+# This file configures Windsurf IDE behavior in this workspace
+
+# General settings
+general:
+  project_name: "Data Warehouse ETL Framework"
+  description: "A modular Extract-Transform-Load (ETL) framework for data warehouse operations"
+
+# Memory system configurations
+memory:
+  auto_save_important_files:
+    - "src/pipeline.py"
+    - "src/cli.py"
+    - "config/sample_etl_config.yaml"
+    - "README.md"
+    - "docs/USER_GUIDE.md"
+    - "docs/DEVELOPERS_GUIDE.md"
+
+# Command auto-run permissions
+# These commands are considered safe to run without asking for permission
+auto_run_commands:
+  - pattern: "python -m unittest *"
+    description: "Run unit tests"
+  - pattern: "python run_tests.py *"
+    description: "Run test suite"
+  - pattern: "python main.py --validate-only *"
+    description: "Validate ETL configuration"
+  - pattern: "python main.py --dry-run *"
+    description: "Dry run ETL pipeline"
+  - pattern: "python main.py --config config/sample_etl_config.yaml --log-level DEBUG"
+    description: "Run sample ETL job with debug logging"
+
+# Directories/files to exclude from code search
+search_exclude:
+  - ".venv/**"
+  - "logs/**"
+  - "output/**"
+  - "**/__pycache__/**"
+  - "etl.log"
+  - "data/sample_db.sqlite"
+
+# Tool configurations
+tools:
+  code_search:
+    prioritize_directories:
+      - "src"
+      - "tests"
+      - "config"
+      - "docs"
+    default_file_extensions:
+      - "py"
+      - "yaml"
+      - "json"
+      - "md"
+
+# Project-specific task automations
+task_automations:
+  - name: "Create new extractor component"
+    description: "Generate scaffolding for a new data extractor"
+    prompt: "Generate a new {extractor_name} extractor component"
+    
+  - name: "Create new transformer component"
+    description: "Generate scaffolding for a new data transformer"
+    prompt: "Generate a new {transformer_name} transformer component"
+    
+  - name: "Create new loader component"
+    description: "Generate scaffolding for a new data loader"
+    prompt: "Generate a new {loader_name} loader component"
+    
+  - name: "Create ETL configuration"
+    description: "Generate a YAML configuration for an ETL pipeline"
+    prompt: "Create an ETL configuration with {extractor_type} extractor, {transformer_type} transformer, and {loader_type} loader"
+
+# Recommended templates for quick access
+templates:
+  - name: "New ETL Config"
+    description: "Template for new ETL configuration file"
+    path: "config/sample_etl_config.yaml"
+    
+  - name: "Custom Extractor"
+    description: "Template for a custom extractor implementation"
+    path: "src/extractors/base_extractor.py"
+    
+  - name: "Custom Transformer"
+    description: "Template for a custom transformer implementation"
+    path: "src/transformers/base_transformer.py"
+    
+  - name: "Custom Loader"
+    description: "Template for a custom loader implementation"
+    path: "src/loaders/base_loader.py"
