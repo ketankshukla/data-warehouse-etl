@@ -221,15 +221,6 @@ The framework comes with comprehensive documentation in the `docs` folder:
 - [**Developers Guide**](docs/DEVELOPERS_GUIDE.md): Technical documentation for developers extending the framework
 - [**Framework Guide**](docs/framework_guide.md): Overview of the framework architecture and components
 
-### Interview Preparation Materials
-
-The `docs/interview_prep` folder contains materials that can help explain the project in an interview setting:
-
-- [**Project Overview**](docs/interview_prep/project_overview.md): High-level explanation of the project architecture and design decisions
-- [**Technical Questions Part 1**](docs/interview_prep/technical_questions_part1.md): Common interview questions about the project (role, challenges, configuration, pipeline)
-- [**Technical Questions Part 2**](docs/interview_prep/technical_questions_part2.md): Additional interview questions (error handling, testing, extensibility)
-- [**Technical Questions Part 3**](docs/interview_prep/technical_questions_part3.md): Advanced interview questions (security, monitoring, future development)
-
 The documentation covers:
 - Configuration examples
 - Command-line usage
